@@ -1,0 +1,41 @@
+.f1 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 70px;
+  margin: 0;
+  padding:0;
+  font-weight: normal;
+}
+.div1{
+    border: 2px solid #7c7c7c;
+}
+.center {
+  text-align: center;
+}
+ul {
+  list-style-type: none;
+  padding: 0px;
+  overflow: hidden;
+  margin:0% 18%;
+  width:63.5%;
+}
+
+li {
+  float: left;
+  font-style: italic;
+}
+
+li a {
+  display: block;
+  color: #7c7c7c;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+li a.active {
+  color: black;
+}
