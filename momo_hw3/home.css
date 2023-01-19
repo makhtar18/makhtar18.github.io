@@ -1,5 +1,5 @@
 .f1 {
-  font-family: "Times New Roman", Times, serif;
+  font-family: Georgia, serif;
   font-size: 70px;
   margin: 0;
   padding:0;
@@ -15,13 +15,15 @@ ul {
   list-style-type: none;
   padding: 0px;
   overflow: hidden;
-  margin:0% 18%;
-  width:63.5%;
+  margin:auto;
+  justify-content: center;
+  width:58%
 }
 
 li {
   float: left;
   font-style: italic;
+  margin: auto
 }
 
 li a {
@@ -30,10 +32,7 @@ li a {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-}
-
-li a:hover:not(.active) {
-  background-color: #ddd;
+  justify-content: center;
 }
 
 li a.active {
