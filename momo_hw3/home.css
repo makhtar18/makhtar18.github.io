@@ -6,7 +6,7 @@
   font-weight: normal;
 }
 .div1{
-    border: 2px solid #7c7c7c;
+    border: 2px solid black;
 }
 .center {
   text-align: center;
@@ -37,4 +37,11 @@ li a {
 
 li a.active {
   color: black;
+}
+
+.iconImg{
+    width:35px;
+    height:35px;
+    padding-left:10px;
+    padding-right:15px;
 }
