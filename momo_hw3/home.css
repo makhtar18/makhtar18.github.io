@@ -14,6 +14,7 @@
 .center {
   text-align: center;
 }
+
 ul {
   list-style-type: none;
   padding: 0px;
@@ -27,10 +28,10 @@ ul {
 
 li {
   float: left;
-  font-style: italic;
   margin: auto;
   margin-left:auto;
   margin-right:auto;
+  font-style: italic;
 }
 
 li a {
