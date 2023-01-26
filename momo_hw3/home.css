@@ -55,7 +55,7 @@ li a.active {
     padding-right:5px;
 }
 .container {
-    width: 570px;
+    width: 565px;
     display:grid;
     margin:auto;
     grid-template-columns:repeat(2,280px);
