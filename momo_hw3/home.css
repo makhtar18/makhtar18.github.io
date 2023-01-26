@@ -1,12 +1,12 @@
 .f1 {
   font-family: Georgia, serif;
-  font-size: 55px;
+  font-size: 42px;
   padding-top:13px;
   margin:auto;
   margin-left:auto;
   margin-right:auto;
   font-weight: normal;
-  width: 650px;
+  width: 500px;
 }
 .div1{
     border: 1.45px solid black;
@@ -23,7 +23,7 @@ ul {
   margin-left:auto;
   margin-right:auto;
   justify-content: center;
-  width:460px
+  width:360px
 }
 
 li {
@@ -32,13 +32,14 @@ li {
   margin-left:auto;
   margin-right:auto;
   font-style: italic;
+  font-size: 11px;
 }
 
 li a {
   display: block;
   color: #7c7c7c;
   text-align: center;
-  padding: 14px 10px;
+  padding: 10px 9px;
   text-decoration: none;
   justify-content: center;
 }
@@ -48,8 +49,16 @@ li a.active {
 }
 
 .iconImg{
-    width:25px;
-    height:25px;
+    width:15px;
+    height:15px;
     padding-left:5px;
-    padding-right:10px;
+    padding-right:5px;
+}
+.container {
+    width: 570px;
+    display:grid;
+    margin:auto;
+    grid-template-columns:repeat(2,280px);
+    grid-template-rows:repeat(2,280px);
+    gap:5px
 }
