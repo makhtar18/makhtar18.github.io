@@ -1,0 +1,80 @@
+body {
+  height: 100%;
+
+}
+
+.bg {
+  background-image: url("background.jpg");
+  background-size: cover;
+}
+
+/* Form Styles */
+
+#contact-form {
+   background-color:rgba(72,72,72,0.6);
+   padding: 20px 20px 20px 20px;
+   margin:auto;
+   border-radius:15px;
+   width: 600px
+}
+#contact-form h1{
+    color:white;
+    margin:auto;
+    text-align: center;
+    border-bottom: 1px solid white;
+    font-weight: normal;
+    padding-bottom:5px;
+}
+#contact-form input,
+#contact-form select {
+   font-size: 15px;
+   font-family: Arial, san-serif;
+   color:white;
+   background: none;
+   border: 1px solid white;
+   border-radius: 7px;
+   margin-bottom: 10px;
+   margin-top:5px;
+   height:20px;
+   padding:5px 10px 5px 10px;
+}
+
+#contact-form label {
+   font-size: 15px;
+   margin-bottom: 2px;
+   font-family: Arial, san-serif;
+   color:#b1f2f4;
+}
+
+
+#contact-form button {
+   cursor:pointer;
+   border:none;
+   background:#991D57;
+   background-image:linear-gradient(bottom, #8C1C50 0%, #991D57 52%);
+   background-image:-moz-linear-gradient(bottom, #8C1C50 0%, #991D57 52%);
+   background-image:-webkit-linear-gradient(bottom, #8C1C50 0%, #991D57 52%);
+   color:#FFF;
+   margin:0 0 5px;
+   padding:10px;
+   border-radius:5px;
+}
+#contact-form button:hover {
+   background-image:linear-gradient(bottom, #9C215A 0%, #A82767 52%);
+   background-image:-moz-linear-gradient(bottom, #9C215A 0%, #A82767 52%);
+   background-image:-webkit-linear-gradient(bottom, #9C215A 0%, #A82767 52%);
+   transition:background-color 0.3s ease-in-out;
+}
+
+
+.formbold-input-flex {
+    display: flex;
+    gap: 10px;
+
+  }
+  .formbold-input-flex > div {
+    width: 50%;
+  }
+  .formbold-form-label {
+      display: block;
+  }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HW6</title>
+    <link rel="stylesheet" href="eventsStyleSheet.css">
+</head>
+<body class="bg">
+<br/>
+<div id="contact-form">
+    <form method="get" action="/">
+        <h1>Events Search</h1>
+        <br/>
+        <div>
+            <label for="keyword">
+                <span class="required">Keyword<span style="color:red">*</span></span>
+                <input type="text" id="keyword" name="keyword" value="" required="required" style="width:96.5%" />
+            </label>
+        </div>
+        <div class="formbold-input-flex">
+            <div>
+                <label for="distance" class="formbold-form-label">
+                    <span>Distance (miles)</span>
+                </label>
+                <input type="number" id="distance" name="distance" value="10" required="required" style="width:60%; -moz-appearance: textfield;"/>
+            </div>
+            <div>
+                <label for="category" class="formbold-form-label">
+                    <span>Category<span style="color:red">*</span></span>
+                </label>
+                <select id="category" name="category" style="width:100%; height:32px;  ">
+                    <option value="Default">Default</option>
+                    <option value="Music">Music</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Theatre">Theatre</option>
+                    <option value="Film">Film</option>
+                    <option value="Miscellaneous">Miscellaneous</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <label for="location">
+                <span>Location<span style="color:red">*</span></span>
+            </label>
+            <input type="checkbox" id="auto-detect" name="auto-detect" value="auto" style="height:15px" >
+            <label for="auto-detect">
+                <span style="color:white">Auto-Detect Location</span>
+            </label>
+            <input type="text" id="location" name="location" required="required" style="width:96.5%">
+            <br>
+        </div>
+        <div style="padding-top:10px;">
+            <button name="search" type="submit" id="search" >SEARCH</button>
+            <button name="clear" type="reset" id="clear" >CLEAR</button>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
