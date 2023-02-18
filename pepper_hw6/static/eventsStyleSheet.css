@@ -6,12 +6,14 @@ body {
 .bg {
   background-image: url("background.jpg");
   background-size: cover;
+  background-attachment: fixed;
 }
 
 /* Form Styles */
 
 #contact-form {
-   background-color:rgba(72,72,72,0.6);
+   background-color:rgba(176, 174, 174, 0.3);
+   backdrop-filter: blur(4px);
    padding: 20px 20px 20px 20px;
    margin:auto;
    border-radius:15px;
@@ -39,42 +41,68 @@ body {
    padding:5px 10px 5px 10px;
 }
 
+#contact-form option {
+    background: black;
+}
+
 #contact-form label {
    font-size: 15px;
    margin-bottom: 2px;
    font-family: Arial, san-serif;
-   color:#b1f2f4;
+   color:lightblue;
 }
 
-
-#contact-form button {
-   cursor:pointer;
+#contact-form #search {
    border:none;
-   background:#991D57;
-   background-image:linear-gradient(bottom, #8C1C50 0%, #991D57 52%);
-   background-image:-moz-linear-gradient(bottom, #8C1C50 0%, #991D57 52%);
-   background-image:-webkit-linear-gradient(bottom, #8C1C50 0%, #991D57 52%);
-   color:#FFF;
+   background:#f27506;
+   color:white;
    margin:0 0 5px;
    padding:10px;
-   border-radius:5px;
+   border-radius:10px;
+   width: 100px;
+   height: 48px;
+   box-shadow:0 4px 0px 0px #db4307;
 }
-#contact-form button:hover {
-   background-image:linear-gradient(bottom, #9C215A 0%, #A82767 52%);
-   background-image:-moz-linear-gradient(bottom, #9C215A 0%, #A82767 52%);
-   background-image:-webkit-linear-gradient(bottom, #9C215A 0%, #A82767 52%);
-   transition:background-color 0.3s ease-in-out;
+#contact-form #search:hover {
+   background:#ffa04b;
 }
 
+#contact-form #clear {
+   border:none;
+   background:#586ca4;
+   color:white;
+   margin:0 0 5px;
+   padding:10px;
+   border-radius:10px;
+   width: 90px;
+   height: 48px;
+   box-shadow:0 4px 0px 0px #404c74;
+}
+#contact-form #clear:hover {
+   background:#6e81b7;;
+}
 
 .formbold-input-flex {
     display: flex;
     gap: 10px;
-
-  }
-  .formbold-input-flex > div {
+}
+.formbold-input-flex > div {
     width: 50%;
-  }
-  .formbold-form-label {
+}
+.formbold-form-label {
       display: block;
-  }
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+  margin:0px;
+}
+a{
+color:black
+}
+
+a:active{
+  color:purple;
+}
