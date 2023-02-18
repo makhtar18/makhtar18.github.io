@@ -67,13 +67,13 @@ function searchFunc() {
                 } else {
                             let responseObj= xhr2.response;
                             var obj = JSON.parse(responseObj);
-                            console.log('Done '+responseObj);
+                            //console.log('Done '+responseObj);
                             var loc = obj.loc.split(',');
                             lat = loc[0];
                             lng = loc[1];
                             geo = window.geohash.encode(lat, lng, 6);
-                            console.log("geocode: "+geo);
-                            console.log(lat+" "+lng);
+                            //console.log("geocode: "+geo);
+                            //console.log(lat+" "+lng);
                         }
                 };
                 xhr2.send();
@@ -88,18 +88,18 @@ function searchFunc() {
                 } else {
                     let responseObj= xhr.response;
                     var obj = JSON.parse(responseObj);
-                    console.log('Done '+responseObj);
+                    //console.log('Done '+responseObj);
                     if(obj.results.length>0){
                         lat=obj.results[0].geometry.location.lat;
                         lng=obj.results[0].geometry.location.lng
                         geo = window.geohash.encode(lat, lng, 6);
-                        console.log("geocode: "+geo);
+                        //console.log("geocode: "+geo);
                     }
                     else {
                         displayEventsTable(null);
                         callEventsApi=false;
                     }
-                    console.log(lat+" "+lng);
+                    //console.log(lat+" "+lng);
 
                 }
             };
@@ -117,7 +117,7 @@ function searchFunc() {
                             console.log("Yo1 "+xhr1.status);
                         } else {
                             var obj = JSON.parse(xhr1.response);
-                            console.log(xhr1.response);
+                            //console.log(xhr1.response);
                             //console.log(obj._embedded.events[0].name);
                             if(obj.page.totalPages==0)
                                 displayEventsTable(null);
@@ -133,6 +133,8 @@ function searchFunc() {
 
 function displayEventsTable(events){
     var eventsTable = document.getElementById("eventsTable");
+    var eventsInfo = document.getElementById("eventsInfo");
+    eventsInfo.innerHTML = "";
     if(events==null || events.length==0 || events == undefined){
         eventsTable.innerHTML = '<div style="width:1200px; margin:auto; color:#d20909; text-align:center; background:white; padding:10px">No Records found</div>';
     }
@@ -143,8 +145,12 @@ function displayEventsTable(events){
             var genre='';
             var venue='';
             var eventName='';
-            var date = event.dates.start.localDate;
-            var time = event.dates.start.localTime;
+            var date='';
+            var time='';
+            if(!(event.dates.start.localDate==undefined))
+                date = event.dates.start.localDate;
+            if(!(event.dates.start.localTime==undefined))
+                time = event.dates.start.localTime;
             if(!(event.images==undefined) && event.images.length>0)
                 icon = event.images[0].url;
             var eventName = event.name;
@@ -156,7 +162,7 @@ function displayEventsTable(events){
             }
             s=s+'<tr><td><p>'+date+'<br>'+time+'</p><td>';
             s=s+'<img src='+icon+' style="width:80px; height:50px; padding:4px"></img></td>';
-            s=s+'<td eventId="'+event.id+'"><a href="#eventsInfo" style="text-decoration: none;">'+eventName+'</a></td>';
+            s=s+'<td><a href="#eventsInfo" style="text-decoration: none;" onclick="displayEventInfo(this)" eventId="'+event.id+'">'+eventName+'</a></td>';
             s=s+'<td>'+genre+'</td>';
             s=s+'<td>'+venue+'</td></tr>';
         }
@@ -164,6 +170,124 @@ function displayEventsTable(events){
         eventsTable.innerHTML = s;
 
     }
+}
+
+function displayEventInfo(event) {
+    var eventInfo = event.getAttribute('eventId');
+    var eventInfoUrl = "/eventInfo?eventId="+eventInfo;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', eventInfoUrl, false);
+    xhr.onload = function() {
+        if (xhr.status != 200) {
+            console.log("Yo1 "+xhr.status);
+        } else {
+            console.log(xhr.response);
+            var obj = JSON.parse(xhr.response);
+            var localDate;
+            var localTime;
+            var date='';
+            var artist='';
+            var venue='';
+            var finalGenre='',subGenre,genre,segment,subType,type;
+            var priceRanges='',min,max;
+            var ticketStatus='';
+            var buyUrl='';
+            var seatMap='';
+            if(obj.dates.start.localDate!=undefined)
+                localDate = obj.dates.start.localDate;
+            if(obj.dates.start.localTime!=undefined)
+                localTime = obj.dates.start.localTime;
+            date = localDate+' '+localTime;
+            for(attraction of obj._embedded.attractions){
+                if(artist=='')
+                    artist = '<a href="'+attraction.url+'">'+attraction.name+'</a>';
+                else
+                    artist = artist+' | '+'<a href="'+attraction.url+'">'+attraction.name+'</a>';
+            }
+            if(obj._embedded.venues!=undefined && obj._embedded.venues.length>0)
+                venue = obj._embedded.venues[0].name;
+            if(obj.classifications!=undefined && obj.classifications.length>0){
+
+                if(obj.classifications[0].subGenre!=undefined) {
+                    subGenre=obj.classifications[0].subGenre.name;
+                    if(finalGenre=='')
+                        finalGenre= subGenre;
+                    else
+                        finalGenre=finalGenre+' | '+subGenre;
+                }
+
+                if(obj.classifications[0].genre!=undefined){
+                    genre=obj.classifications[0].genre.name;
+                    if(finalGenre=='')
+                        finalGenre= genre;
+                    else
+                        finalGenre=finalGenre+' | '+genre;
+                }
+
+                if(obj.classifications[0].segment!=undefined){
+                    segment=obj.classifications[0].segment.name;
+                    if(finalGenre=='')
+                        finalGenre = segment;
+                    else
+                        finalGenre = finalGenre+' | '+segment;
+                }
+
+                if(obj.classifications[0].subType!=undefined){
+                    subType=obj.classifications[0].subType.name;
+                    if(finalGenre=='')
+                        finalGenre = subType;
+                    else
+                        finalGenre = finalGenre+' | '+subType;
+                }
+
+                if(obj.classifications[0].type!=undefined){
+                    type=obj.classifications[0].type.name;
+                    if(finalGenre=='')
+                        finalGenre = type;
+                    else
+                        finalGenre=finalGenre+' | '+type;
+                }
+            }
+            if(obj.priceRanges!=undefined && obj.priceRanges.length>0){
+                min = obj.priceRanges[0].min;
+                max = obj.priceRanges[0].max;
+                priceRanges=min+' - '+max+' USD';
+            }
+            if(obj.dates.status!=undefined){
+                ticketStatus = obj.dates.status.code;
+            }
+            if(obj.url!=undefined)
+                buyUrl = obj.url;
+
+            if(obj.seatmap!=undefined)
+                seatMap = obj.seatmap.staticUrl;
+
+
+            var innerString = '<div id="info"><h1>'+obj.name+'</h1><div class="container"><div><p>';
+            if(date!='')
+                innerString = innerString+'<span class="eventLabel">Date</span><br><span class="eventFields">'+date+'</span><br>';
+            if(artist!='')
+                innerString = innerString+'<span class="eventLabel">Artist/Team</span><br><span class="eventFields">'+artist+'</span><br>';
+            if(venue!='')
+                innerString = innerString+'<span class="eventLabel">Venue</span><br><span class="eventFields">'+venue+'</span><br>';
+            if(finalGenre!='')
+                innerString=innerString+'<span class="eventLabel">Genres</span><br><span class="eventFields">'+finalGenre+'</span><br>';
+            if(priceRanges!='')
+                innerString=innerString+'<span class="eventLabel">Price Ranges</span><br><span class="eventFields">'+priceRanges+'</span><br>';
+            if(ticketStatus!='')
+                innerString=innerString+'<span class="eventLabel">Ticket Status</span><br><span class="eventFields">'+ticketStatus+'</span><br>';
+            if(buyUrl!='')
+                innerString=innerString+'<span class="eventLabel">Buy Ticket At:</span><br><span class="eventFields"><a href="'+buyUrl+'">Ticketmaster</a></span>';
+            innerString=innerString+'</p></div>';
+            if(seatMap!='')
+                innerString = innerString+'<div><img src="'+seatMap+'" width=450px style="object-fit: cover; float:right;"></div>';
+            innerString=innerString+'</div><br></div>'
+
+            document.getElementById('eventsInfo').innerHTML = innerString;
+
+        }
+    };
+    xhr.send();
 }
 
 function sortTable() {

@@ -24,5 +24,17 @@ def submit():
     #print(response.json());
     return response.json();
 
+
+@app.route('/eventInfo')
+def eventInfo():
+    print("Checking url "+request.url)
+    eventId = request.args.get('eventId');
+    apikey = 'ivkPBavAMu7OClWFpGKkIiS4Hsrfkd76';
+    url = 'https://app.ticketmaster.com/discovery/v2/events/'+eventId+'?apikey='+apikey;
+    print("Executing "+url);
+    response = requests.get(url);
+    #print(response.json());
+    return response.json();
+
 if __name__ == "__main__":
     app.run(debug=True)

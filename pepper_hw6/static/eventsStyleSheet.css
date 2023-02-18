@@ -49,7 +49,7 @@ body {
    font-size: 15px;
    margin-bottom: 2px;
    font-family: Arial, san-serif;
-   color:lightblue;
+   color:#8cc8e6;
 }
 
 #contact-form #search {
@@ -99,10 +99,63 @@ table, th, td {
   padding: 5px;
   margin:0px;
 }
-a{
+#eventsTable a{
 color:black
 }
 
-a:active{
+#eventsTable a:active{
+  color:purple;
+}
+
+#info{
+    margin:auto;
+    width:1000px;
+    background-color:rgba(176, 174, 174, 0.3);
+    backdrop-filter: blur(4px);
+    border-radius:15px;
+    margin-top:30px;
+    margin-bottom:40px;
+}
+
+#info h1{
+    color:white;
+    margin:auto;
+    text-align: center;
+    font-weight: normal;
+    padding-bottom:5px;
+    padding-top:20px;
+    font-size: 30px;
+    margin-bottom:50px;
+}
+
+.eventLabel{
+    font-size: 18px;
+    font-family: Arial, san-serif;
+    color: #4ad5d5;
+    padding-bottom:5px;
+    display: inline-block;
+}
+.eventFields{
+    color: white;
+    padding-bottom:10px;
+    display: inline-block;
+    font-size: 12px;
+    font-family: Arial, san-serif;
+}
+
+.container {
+    width: 900px;
+    display:grid;
+    margin:auto;
+    grid-template-columns:repeat(2,450px);
+    gap:5px;
+}
+
+#eventsInfo a{
+    color: #27b8e6;
+    text-decoration: none;
+}
+
+#eventsInfo a:active{
   color:purple;
 }
