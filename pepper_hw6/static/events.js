@@ -35,6 +35,12 @@ clrBtn.addEventListener('click', function() {
     var category = document.getElementById('category');
     category.value = "Default";
 
+    var eventInfo = document.getElementById('eventsInfo')
+    eventInfo.innerHTML = "";
+
+    var eventsTable = document.getElementById("eventsTable");
+    eventsTable.innerHTML = "";
+
 });
 
 
@@ -200,9 +206,9 @@ function displayEventInfo(event) {
             date = localDate+' '+localTime;
             for(attraction of obj._embedded.attractions){
                 if(artist=='')
-                    artist = '<a href="'+attraction.url+'">'+attraction.name+'</a>';
+                    artist = '<a target="_blank" rel="noopener noreferrer" href="'+attraction.url+'">'+attraction.name+'</a>';
                 else
-                    artist = artist+' | '+'<a href="'+attraction.url+'">'+attraction.name+'</a>';
+                    artist = artist+' | '+'<a target="_blank" rel="noopener noreferrer"  href="'+attraction.url+'">'+attraction.name+'</a>';
             }
             if(obj._embedded.venues!=undefined && obj._embedded.venues.length>0)
                 venue = obj._embedded.venues[0].name;
@@ -277,7 +283,7 @@ function displayEventInfo(event) {
             if(ticketStatus!='')
                 innerString=innerString+'<span class="eventLabel">Ticket Status</span><br><span class="eventFields">'+ticketStatus+'</span><br>';
             if(buyUrl!='')
-                innerString=innerString+'<span class="eventLabel">Buy Ticket At:</span><br><span class="eventFields"><a href="'+buyUrl+'">Ticketmaster</a></span>';
+                innerString=innerString+'<span class="eventLabel">Buy Ticket At:</span><br><span class="eventFields"><a target="_blank" rel="noopener noreferrer" href="'+buyUrl+'">Ticketmaster</a></span>';
             innerString=innerString+'</p></div>';
             if(seatMap!='')
                 innerString = innerString+'<div><img src="'+seatMap+'" width=450px style="object-fit: cover; float:right;"></div>';
