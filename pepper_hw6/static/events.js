@@ -1,6 +1,7 @@
 var categoryDict= {"Music":"KZFzniwnSyZfZ7v7nJ", "Sports":"KZFzniwnSyZfZ7v7nE", "Arts": "KZFzniwnSyZfZ7v7na",
  "Theatre": "KZFzniwnSyZfZ7v7na", "Film":"KZFzniwnSyZfZ7v7nn","Miscellaneous":"KZFzniwnSyZfZ7v7n1","Default":""};
 
+var ticketStatusDict = {"onsale":"green", "offsale":"red", "cancelled":"black", "postponed":"orange", "rescheduled":"orange"};
 var eventDict={};
 var checkbox = document.getElementById("auto-detect");
 checkbox.addEventListener('change', function() {
@@ -187,7 +188,7 @@ function displayEventInfo(event) {
         if (xhr.status != 200) {
             console.log("Yo1 "+xhr.status);
         } else {
-            console.log(xhr.response);
+            //console.log(xhr.response);
             var obj = JSON.parse(xhr.response);
             var localDate;
             var localTime;
@@ -204,6 +205,7 @@ function displayEventInfo(event) {
             if(obj.dates.start.localTime!=undefined)
                 localTime = obj.dates.start.localTime;
             date = localDate+' '+localTime;
+            if(obj._embedded.attractions!=undefined)
             for(attraction of obj._embedded.attractions){
                 if(artist=='')
                     artist = '<a target="_blank" rel="noopener noreferrer" href="'+attraction.url+'">'+attraction.name+'</a>';
@@ -214,7 +216,7 @@ function displayEventInfo(event) {
                 venue = obj._embedded.venues[0].name;
             if(obj.classifications!=undefined && obj.classifications.length>0){
 
-                if(obj.classifications[0].subGenre!=undefined) {
+                if(obj.classifications[0].subGenre!=undefined && obj.classifications[0].subGenre.name.toLowerCase()!='undefined') {
                     subGenre=obj.classifications[0].subGenre.name;
                     if(finalGenre=='')
                         finalGenre= subGenre;
@@ -222,7 +224,7 @@ function displayEventInfo(event) {
                         finalGenre=finalGenre+' | '+subGenre;
                 }
 
-                if(obj.classifications[0].genre!=undefined){
+                if(obj.classifications[0].genre!=undefined && obj.classifications[0].genre.name.toLowerCase()!='undefined'){
                     genre=obj.classifications[0].genre.name;
                     if(finalGenre=='')
                         finalGenre= genre;
@@ -230,7 +232,7 @@ function displayEventInfo(event) {
                         finalGenre=finalGenre+' | '+genre;
                 }
 
-                if(obj.classifications[0].segment!=undefined){
+                if(obj.classifications[0].segment!=undefined && obj.classifications[0].segment.name.toLowerCase()!='undefined'){
                     segment=obj.classifications[0].segment.name;
                     if(finalGenre=='')
                         finalGenre = segment;
@@ -238,7 +240,7 @@ function displayEventInfo(event) {
                         finalGenre = finalGenre+' | '+segment;
                 }
 
-                if(obj.classifications[0].subType!=undefined){
+                if(obj.classifications[0].subType!=undefined && obj.classifications[0].subType.name.toLowerCase()!='undefined'){
                     subType=obj.classifications[0].subType.name;
                     if(finalGenre=='')
                         finalGenre = subType;
@@ -246,7 +248,7 @@ function displayEventInfo(event) {
                         finalGenre = finalGenre+' | '+subType;
                 }
 
-                if(obj.classifications[0].type!=undefined){
+                if(obj.classifications[0].type!=undefined && obj.classifications[0].type.name.toLowerCase()!='undefined'){
                     type=obj.classifications[0].type.name;
                     if(finalGenre=='')
                         finalGenre = type;
@@ -280,8 +282,21 @@ function displayEventInfo(event) {
                 innerString=innerString+'<span class="eventLabel">Genres</span><br><span class="eventFields">'+finalGenre+'</span><br>';
             if(priceRanges!='')
                 innerString=innerString+'<span class="eventLabel">Price Ranges</span><br><span class="eventFields">'+priceRanges+'</span><br>';
-            if(ticketStatus!='')
-                innerString=innerString+'<span class="eventLabel">Ticket Status</span><br><span class="eventFields">'+ticketStatus+'</span><br>';
+            if(ticketStatus!=''){
+                var color = ticketStatusDict[ticketStatus.toLowerCase()]
+                if(ticketStatus.toLowerCase()=='onsale')
+                    ticketStatus= 'On Sale';
+                else if(ticketStatus.toLowerCase()=='offsale')
+                    ticketStatus= 'Off Sale';
+                else if(ticketStatus.toLowerCase()=='cancelled')
+                    ticketStatus= 'Cancelled';
+                else if(ticketStatus.toLowerCase()=='postponed')
+                    ticketStatus= 'Postponed';
+                else if(ticketStatus.toLowerCase()=='rescheduled')
+                     ticketStatus= 'Rescheduled';
+
+                innerString=innerString+'<span class="eventLabel">Ticket Status</span><br><span class="circle eventFields" style="background:'+color+';">'+ticketStatus+'</span><br>';
+            }
             if(buyUrl!='')
                 innerString=innerString+'<span class="eventLabel">Buy Ticket At:</span><br><span class="eventFields"><a target="_blank" rel="noopener noreferrer" href="'+buyUrl+'">Ticketmaster</a></span>';
             innerString=innerString+'</p></div>';
