@@ -376,7 +376,8 @@ function getVenueDetails(venue){
           console.log("Yo1 "+xhr.status);
        } else {
           var obj = JSON.parse(xhr.response);
-          console.log(xhr.response);
+          //console.log(xhr.response);
+          if(obj._embedded!=undefined){
           var name=obj._embedded.venues[0].name;
           var address= obj._embedded.venues[0].address.line1;
           var city = obj._embedded.venues[0].city.name+", "+obj._embedded.venues[0].state.stateCode;
@@ -401,6 +402,9 @@ function getVenueDetails(venue){
           innerString = innerString + '</div></div></div></div>';
           venueInfo.innerHTML = innerString;
          }
-       };
+         else
+            venueInfo.innerHTML = '';
+       }
+    };
     xhr.send();
 }
