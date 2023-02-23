@@ -11,7 +11,7 @@ def index():
 
 @app.route('/submit')
 def submit():
-    print("Checking url "+request.url)
+    print("Submit checking url "+request.url)
     keyword = request.args.get('keyword');
     radius = request.args.get('radius');
     geoPoint = request.args.get('geoPoint');
@@ -27,10 +27,21 @@ def submit():
 
 @app.route('/eventInfo')
 def eventInfo():
-    print("Checking url "+request.url)
+    print("Event checking url "+request.url)
     eventId = request.args.get('eventId');
     apikey = 'ivkPBavAMu7OClWFpGKkIiS4Hsrfkd76';
     url = 'https://app.ticketmaster.com/discovery/v2/events/'+eventId+'?apikey='+apikey;
+    print("Executing "+url);
+    response = requests.get(url);
+    #print(response.json());
+    return response.json();
+
+@app.route('/venue')
+def venueInfo():
+    print("Venue checking url "+request.url)
+    venueName = request.args.get('venue');
+    apikey = 'ivkPBavAMu7OClWFpGKkIiS4Hsrfkd76';
+    url = 'https://app.ticketmaster.com/discovery/v2/venues/?apikey='+apikey+'&keyword='+venueName;
     print("Executing "+url);
     response = requests.get(url);
     #print(response.json());

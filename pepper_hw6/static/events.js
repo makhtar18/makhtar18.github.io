@@ -42,6 +42,9 @@ clrBtn.addEventListener('click', function() {
     var eventsTable = document.getElementById("eventsTable");
     eventsTable.innerHTML = "";
 
+    var venueInfo = document.getElementById("venueInfo");
+    venueInfo.innerHTML = "";
+
 });
 
 
@@ -142,6 +145,8 @@ function displayEventsTable(events){
     var eventsTable = document.getElementById("eventsTable");
     var eventsInfo = document.getElementById("eventsInfo");
     eventsInfo.innerHTML = "";
+    var venueInfo = document.getElementById("venueInfo");
+    venueInfo.innerHTML = "";
     if(events==null || events.length==0 || events == undefined){
         eventsTable.innerHTML = '<div style="width:1200px; margin:auto; color:#d20909; text-align:center; background:white; padding:10px">No Records found</div>';
     }
@@ -169,7 +174,7 @@ function displayEventsTable(events){
             }
             s=s+'<tr><td><p>'+date+'<br>'+time+'</p><td>';
             s=s+'<img src='+icon+' style="width:80px; height:50px; padding:4px"></img></td>';
-            s=s+'<td><a href="#eventsInfo" style="text-decoration: none;" onclick="displayEventInfo(this)" eventId="'+event.id+'">'+eventName+'</a></td>';
+            s=s+'<td><a href="javascript:void(0);" style="text-decoration: none;" onclick="displayEventInfo(this)" eventId="'+event.id+'">'+eventName+'</a></td>';
             s=s+'<td>'+genre+'</td>';
             s=s+'<td>'+venue+'</td></tr>';
         }
@@ -180,6 +185,7 @@ function displayEventsTable(events){
 }
 
 function displayEventInfo(event) {
+    document.getElementById('eventsInfo').scrollIntoView(true);
     var eventInfo = event.getAttribute('eventId');
     var eventInfoUrl = "/eventInfo?eventId="+eventInfo;
     let xhr = new XMLHttpRequest();
@@ -276,8 +282,10 @@ function displayEventInfo(event) {
                 innerString = innerString+'<span class="eventLabel">Date</span><br><span class="eventFields">'+date+'</span><br>';
             if(artist!='')
                 innerString = innerString+'<span class="eventLabel">Artist/Team</span><br><span class="eventFields">'+artist+'</span><br>';
-            if(venue!='')
+            if(venue!='') {
                 innerString = innerString+'<span class="eventLabel">Venue</span><br><span class="eventFields">'+venue+'</span><br>';
+                getVenueDetails(venue);
+            }
             if(finalGenre!='')
                 innerString=innerString+'<span class="eventLabel">Genres</span><br><span class="eventFields">'+finalGenre+'</span><br>';
             if(priceRanges!='')
@@ -301,7 +309,7 @@ function displayEventInfo(event) {
                 innerString=innerString+'<span class="eventLabel">Buy Ticket At:</span><br><span class="eventFields"><a target="_blank" rel="noopener noreferrer" href="'+buyUrl+'">Ticketmaster</a></span>';
             innerString=innerString+'</p></div>';
             if(seatMap!='')
-                innerString = innerString+'<div><img src="'+seatMap+'" width=450px style="object-fit: cover; float:right;"></div>';
+                innerString = innerString+'<div><img src="'+seatMap+'"style="object-fit: cover; float:left; max-height:350px; max-width:450px;"></div>';
             innerString=innerString+'</div><br></div>'
 
             document.getElementById('eventsInfo').innerHTML = innerString;
@@ -349,3 +357,50 @@ function sortTable(n) {
 }
 
 
+function showVenue(){
+    console.log("Venue");
+    var coll = document.getElementById("collapsible");
+    var i;
+    coll.classList.toggle("active");
+    var content = coll.nextElementSibling;
+    content.style.display = "block";
+    coll.style.display="none";
+}
+
+function getVenueDetails(venue){
+    var xhr = new XMLHttpRequest();
+    var url= "/venue?venue="+venue;
+    xhr.open('GET', url, false);
+    xhr.onload = function() {
+       if (xhr.status != 200) {
+          console.log("Yo1 "+xhr.status);
+       } else {
+          var obj = JSON.parse(xhr.response);
+          console.log(xhr.response);
+          var name=obj._embedded.venues[0].name;
+          var address= obj._embedded.venues[0].address.line1;
+          var city = obj._embedded.venues[0].city.name+", "+obj._embedded.venues[0].state.stateCode;
+          var postalCode = obj._embedded.venues[0].postalCode;
+          var imageUrl;
+          if(obj._embedded.venues[0].images!=undefined && obj._embedded.venues[0].images!=null && obj._embedded.venues[0].images!='N/A')
+            imageUrl = obj._embedded.venues[0].images[0].url;
+          var upcomingEvents = obj._embedded.venues[0].url;
+          var venueInfo = document.getElementById("venueInfo");
+          var googleMapUrl = 'https://www.google.com/maps/search/?api=1&query='+name+', '+address+', '+city+', '+postalCode;
+          var innerString= '<div id="venueDetails"><div class="collapsible" id="collapsible"><h2 style="margin:0px;">Show Venue Details</h2><div class="dropdown" onclick="showVenue()"></div></div><div class="content"><div class="venueAddress">';
+          innerString = innerString + '<h2><span style="border-bottom: 1px solid black;margin: auto">'+'&nbsp'+name+'&nbsp</span></h2>';
+          if(imageUrl!=undefined)
+              innerString = innerString + '<div><img src="'+imageUrl+'" style="width:110px; height:80px; margin-left:435px; float:center"></img></div>';
+          innerString = innerString + '<div class="container" style="padding-top:15px;">';
+          if(address!=undefined && address!='N/A') {
+              innerString = innerString + '<div style="border-right:1px solid black; padding:15px;"><div style="flex-direction:row; display:flex; width: 250px; margin:auto;"><span><b>Address:&nbsp</b></span><span style="width:250px;">'+address+'<br>'+city+'<br>'+postalCode+'</span></div>';
+              innerString = innerString + '<p style="margin:auto; width:150px; margin-top:10px;"><a href="'+googleMapUrl+'" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></p></div>';
+          }
+          if(upcomingEvents!= undefined && upcomingEvents!='N/A')
+                 innerString = innerString + '<div style="text-align:center;padding:5px;"><a href="'+upcomingEvents+'" target="_blank" rel="noopener noreferrer">More events at this venue</a></div>';
+          innerString = innerString + '</div></div></div></div>';
+          venueInfo.innerHTML = innerString;
+         }
+       };
+    xhr.send();
+}
