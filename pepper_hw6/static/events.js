@@ -184,7 +184,7 @@ function displayEventsTable(events){
 }
 
 function displayEventInfo(event) {
-    document.getElementById('eventsInfo').scrollIntoView(true);
+
     var eventInfo = event.getAttribute('eventId');
     var eventInfoUrl = "/eventInfo?eventId="+eventInfo;
     let xhr = new XMLHttpRequest();
@@ -338,6 +338,7 @@ function displayEventInfo(event) {
         }
     };
     xhr.send();
+    document.getElementById('eventsInfo').scrollIntoView(true);
 }
 
 function sortTable(n) {
