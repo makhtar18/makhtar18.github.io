@@ -151,7 +151,7 @@ function displayEventsTable(events){
         eventsTable.innerHTML = '<div style="width:1200px; margin:auto; color:#d20909; text-align:center; background:white; padding:10px; font-family:Arial, san-serif;">No Records found</div>';
     }
     else {
-        var s = '<table id="searchTable" style="background:white; width:1200px; margin:auto; text-align:center"><tr style="box-shadow: 0 2px 2px 2px #a4a0a07d;"><th style="width:200px; padding:5px;">Date</th><th style="width:200px; padding:5px;">Icon</th><th style="width:500px; padding:5px; cursor:pointer;" onclick="sortTable(2);">Event</th><th style="width:100px; padding:5px; cursor:pointer;" onclick="sortTable(3)">Genre</th><th style="width:250px; padding:5px; cursor:pointer;" onclick="sortTable(4)">Venue</th></tr>';
+        var s = '<table id="searchTable" style="background:white; width:1200px; margin:auto; text-align:center"><tr style="box-shadow: 0 2px 2px 2px #a4a0a07d;"><th style="width:175px; padding:5px;">Date</th><th style="width:175px; padding:5px;">Icon</th><th style="width:550px; padding:5px; cursor:pointer;" onclick="sortTable(2);">Event</th><th style="width:125px; padding:5px; cursor:pointer;" onclick="sortTable(3)">Genre</th><th style="width:225px; padding:5px; cursor:pointer;" onclick="sortTable(4)">Venue</th></tr>';
         for(event of events){
             var icon='';
             var genre='';
