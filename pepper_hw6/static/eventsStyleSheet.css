@@ -105,8 +105,8 @@ table, th, td {
 color:black
 }
 
-#eventsTable a:active{
-  color:purple;
+#eventsTable a:hover{
+  color:rgb(103, 103, 198);
 }
 
 #info{
