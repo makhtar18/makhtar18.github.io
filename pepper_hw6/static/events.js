@@ -1,5 +1,4 @@
-var categoryDict= {"Music":"KZFzniwnSyZfZ7v7nJ", "Sports":"KZFzniwnSyZfZ7v7nE", "Arts": "KZFzniwnSyZfZ7v7na",
- "Theatre": "KZFzniwnSyZfZ7v7na", "Film":"KZFzniwnSyZfZ7v7nn","Miscellaneous":"KZFzniwnSyZfZ7v7n1","Default":""};
+var categoryDict= {"Music":"KZFzniwnSyZfZ7v7nJ", "Sports":"KZFzniwnSyZfZ7v7nE", "Arts&Theatre": "KZFzniwnSyZfZ7v7na", "Film":"KZFzniwnSyZfZ7v7nn","Miscellaneous":"KZFzniwnSyZfZ7v7n1","Default":""};
 
 var ticketStatusDict = {"onsale":"green", "offsale":"red", "cancelled":"black", "postponed":"orange", "rescheduled":"orange"};
 var eventDict={};
@@ -206,11 +205,17 @@ function displayEventInfo(event) {
             var ticketStatus='';
             var buyUrl='';
             var seatMap='';
-            if(obj.dates.start.localDate!=undefined)
+            if(obj.dates.start.localDate!=undefined) {
                 localDate = obj.dates.start.localDate;
-            if(obj.dates.start.localTime!=undefined)
+                date = date + localDate;
+            }
+            if(obj.dates.start.localTime!=undefined) {
                 localTime = obj.dates.start.localTime;
-            date = localDate+' '+localTime;
+                if(date=='')
+                    date = localTime;
+                else
+                    date = date+' '+localTime;
+            }
             if(obj._embedded.attractions!=undefined)
             for(attraction of obj._embedded.attractions){
                 if(attraction.name!=undefined && attraction.name!=null) {
@@ -410,8 +415,8 @@ function getVenueDetails(venue){
               innerString = innerString + '<div style="margin:auto; width:130px;"><img src="'+imageUrl+'" style="width:130px; height:80px;"></img></div>';
           innerString = innerString + '<div class="container" style="padding-top:15px;">';
           if(address!=undefined && address!='N/A') {
-              innerString = innerString + '<div style="border-right:1px solid black; padding:15px;"><div style="flex-direction:row; display:flex; width: 250px; margin:auto;"><span><b>Address:&nbsp</b></span><span style="width:250px;">'+address+'<br>'+city+'<br>'+postalCode+'</span></div>';
-              innerString = innerString + '<p style="margin:auto; width:160px; margin-top:10px;"><a href="'+googleMapUrl+'" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></p></div>';
+              innerString = innerString + '<div style="border-right:1px solid black; padding:15px;"><div style="flex-direction:row; display:flex; width: 300px; margin:auto;"><span><b>Address:&nbsp</b></span><span style="width:250px;">'+address+'<br>'+city+'<br>'+postalCode+'</span></div>';
+              innerString = innerString + '<p style="margin:auto; width:200px; margin-top:10px;"><a href="'+googleMapUrl+'" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></p></div>';
           }
           if(upcomingEvents!= undefined && upcomingEvents!='N/A')
                  innerString = innerString + '<div style="text-align:center;padding:5px;"><a href="'+upcomingEvents+'" target="_blank" rel="noopener noreferrer">More events at this venue</a></div>';
