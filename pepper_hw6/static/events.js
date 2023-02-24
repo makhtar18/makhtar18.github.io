@@ -213,11 +213,19 @@ function displayEventInfo(event) {
             date = localDate+' '+localTime;
             if(obj._embedded.attractions!=undefined)
             for(attraction of obj._embedded.attractions){
-                if(attraction.url!=undefined && attraction.url!=null) {
-                    if(artist=='')
-                        artist = '<a target="_blank" rel="noopener noreferrer" href="'+attraction.url+'">'+attraction.name+'</a>';
-                    else
-                        artist = artist+' | '+'<a target="_blank" rel="noopener noreferrer"  href="'+attraction.url+'">'+attraction.name+'</a>';
+                if(attraction.name!=undefined && attraction.name!=null) {
+                    if(attraction.url!=undefined && attraction.url!=null){
+                        if(artist=='')
+                           artist = '<a target="_blank" rel="noopener noreferrer" href="'+attraction.url+'">'+attraction.name+'</a>';
+                        else
+                           artist = artist+' | '+'<a target="_blank" rel="noopener noreferrer"  href="'+attraction.url+'">'+attraction.name+'</a>';
+                    }
+                    else {
+                        if(artist=='')
+                            artist = attraction.name;
+                        else
+                            artist = artist+' | '+attraction.name;
+                    }
                 }
             }
             if(obj._embedded.venues!=undefined && obj._embedded.venues.length>0)
@@ -266,7 +274,14 @@ function displayEventInfo(event) {
             if(obj.priceRanges!=undefined && obj.priceRanges.length>0){
                 min = obj.priceRanges[0].min;
                 max = obj.priceRanges[0].max;
-                priceRanges=min+' - '+max+' USD';
+                if(min!=undefined & max==undefined){
+                    priceRanges=min+' - '+min+' USD';
+                }
+                else if(max!=undefined & min==undefined){
+                    priceRanges=max+' - '+max+' USD';
+                }
+                else
+                    priceRanges=min+' - '+max+' USD';
             }
             if(obj.dates.status!=undefined){
                 ticketStatus = obj.dates.status.code;

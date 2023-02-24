@@ -166,7 +166,7 @@ color:black
     text-decoration: none;
 }
 
-#eventsInfo a:active{
+#eventsInfo a:hover{
   color:rgb(116, 116, 202);
 }
 
@@ -229,6 +229,6 @@ color:black
     text-decoration: none;
 }
 
-#venueInfo a:active{
+#venueInfo a:hover{
   color:rgb(116, 116, 202);
 }
