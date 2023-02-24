@@ -223,13 +223,12 @@ function displayEventInfo(event) {
             if(obj._embedded.venues!=undefined && obj._embedded.venues.length>0)
                 venue = obj._embedded.venues[0].name;
             if(obj.classifications!=undefined && obj.classifications.length>0){
-
-                if(obj.classifications[0].subGenre!=undefined && obj.classifications[0].subGenre.name.toLowerCase()!='undefined') {
-                    subGenre=obj.classifications[0].subGenre.name;
+                if(obj.classifications[0].segment!=undefined && obj.classifications[0].segment.name.toLowerCase()!='undefined'){
+                    segment=obj.classifications[0].segment.name;
                     if(finalGenre=='')
-                        finalGenre= subGenre;
+                        finalGenre = segment;
                     else
-                        finalGenre=finalGenre+' | '+subGenre;
+                        finalGenre = finalGenre+' | '+segment;
                 }
 
                 if(obj.classifications[0].genre!=undefined && obj.classifications[0].genre.name.toLowerCase()!='undefined'){
@@ -239,13 +238,20 @@ function displayEventInfo(event) {
                     else
                         finalGenre=finalGenre+' | '+genre;
                 }
-
-                if(obj.classifications[0].segment!=undefined && obj.classifications[0].segment.name.toLowerCase()!='undefined'){
-                    segment=obj.classifications[0].segment.name;
+                if(obj.classifications[0].subGenre!=undefined && obj.classifications[0].subGenre.name.toLowerCase()!='undefined') {
+                    subGenre=obj.classifications[0].subGenre.name;
                     if(finalGenre=='')
-                        finalGenre = segment;
+                        finalGenre= subGenre;
                     else
-                        finalGenre = finalGenre+' | '+segment;
+                        finalGenre=finalGenre+' | '+subGenre;
+                }
+
+                if(obj.classifications[0].type!=undefined && obj.classifications[0].type.name.toLowerCase()!='undefined'){
+                    type=obj.classifications[0].type.name;
+                    if(finalGenre=='')
+                        finalGenre = type;
+                    else
+                        finalGenre=finalGenre+' | '+type;
                 }
 
                 if(obj.classifications[0].subType!=undefined && obj.classifications[0].subType.name.toLowerCase()!='undefined'){
@@ -256,13 +262,6 @@ function displayEventInfo(event) {
                         finalGenre = finalGenre+' | '+subType;
                 }
 
-                if(obj.classifications[0].type!=undefined && obj.classifications[0].type.name.toLowerCase()!='undefined'){
-                    type=obj.classifications[0].type.name;
-                    if(finalGenre=='')
-                        finalGenre = type;
-                    else
-                        finalGenre=finalGenre+' | '+type;
-                }
             }
             if(obj.priceRanges!=undefined && obj.priceRanges.length>0){
                 min = obj.priceRanges[0].min;
