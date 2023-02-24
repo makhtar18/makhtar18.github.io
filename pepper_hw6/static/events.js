@@ -148,10 +148,10 @@ function displayEventsTable(events){
     var venueInfo = document.getElementById("venueInfo");
     venueInfo.innerHTML = "";
     if(events==null || events.length==0 || events == undefined){
-        eventsTable.innerHTML = '<div style="width:1200px; margin:auto; color:#d20909; text-align:center; background:white; padding:10px">No Records found</div>';
+        eventsTable.innerHTML = '<div style="width:1200px; margin:auto; color:#d20909; text-align:center; background:white; padding:10px; font-family:Arial, san-serif;">No Records found</div>';
     }
     else {
-        var s = '<table id="searchTable" style="background:white; width:1200px; margin:auto; text-align:center"><tr style="box-shadow: 0 2px 2px 2px #a4a0a07d;"><th style="width:200px; padding:5px;">Date</th><th style="width:200px; padding:5px;">Icon</th><th style="width:500px; padding:5px;" onclick="sortTable(2)">Event</th><th style="width:100px; padding:5px;" onclick="sortTable(3)">Genre</th><th style="width:250px; padding:5px;" onclick="sortTable(4)">Venue</th></tr>';
+        var s = '<table id="searchTable" style="background:white; width:1200px; margin:auto; text-align:center"><tr style="box-shadow: 0 2px 2px 2px #a4a0a07d;"><th style="width:200px; padding:5px;">Date</th><th style="width:200px; padding:5px;">Icon</th><th style="width:500px; padding:5px; cursor:pointer;" onclick="sortTable(2);">Event</th><th style="width:100px; padding:5px; cursor:pointer;" onclick="sortTable(3)">Genre</th><th style="width:250px; padding:5px; cursor:pointer;" onclick="sortTable(4)">Venue</th></tr>';
         for(event of events){
             var icon='';
             var genre='';
@@ -277,7 +277,7 @@ function displayEventInfo(event) {
                 seatMap = obj.seatmap.staticUrl;
 
 
-            var innerString = '<div id="info"><h1>'+obj.name+'</h1><div class="container"><div><p>';
+            var innerString = '<div id="info"><h1>'+obj.name+'</h1><div class="container"><div><p style="max-width:350px;">';
             if(date!='')
                 innerString = innerString+'<span class="eventLabel">Date</span><br><span class="eventFields">'+date+'</span><br>';
             if(artist!='')
@@ -388,14 +388,14 @@ function getVenueDetails(venue){
           var upcomingEvents = obj._embedded.venues[0].url;
           var venueInfo = document.getElementById("venueInfo");
           var googleMapUrl = 'https://www.google.com/maps/search/?api=1&query='+name+', '+address+', '+city+', '+postalCode;
-          var innerString= '<div id="venueDetails"><div class="collapsible" id="collapsible"><h2 style="margin:0px;">Show Venue Details</h2><div class="dropdown" onclick="showVenue()"></div></div><div class="content"><div class="venueAddress">';
-          innerString = innerString + '<h2><span style="border-bottom: 1px solid black;margin: auto">'+'&nbsp'+name+'&nbsp</span></h2>';
+          var innerString= '<div id="venueDetails"><div class="collapsible" id="collapsible"><h2 style="margin:0px; font-family: Sans-serif; font-weight: lighter;">Show Venue Details</h2><div class="dropdown" onclick="showVenue()"></div></div><div class="content"><div class="venueAddress">';
+          innerString = innerString + '<h1><span style="border-bottom: 1px solid black;margin: auto">'+'&nbsp'+name+'&nbsp</span></h1>';
           if(imageUrl!=undefined)
-              innerString = innerString + '<div><img src="'+imageUrl+'" style="width:110px; height:80px; margin-left:435px; float:center"></img></div>';
+              innerString = innerString + '<div style="margin:auto; width:130px;"><img src="'+imageUrl+'" style="width:130px; height:80px;"></img></div>';
           innerString = innerString + '<div class="container" style="padding-top:15px;">';
           if(address!=undefined && address!='N/A') {
               innerString = innerString + '<div style="border-right:1px solid black; padding:15px;"><div style="flex-direction:row; display:flex; width: 250px; margin:auto;"><span><b>Address:&nbsp</b></span><span style="width:250px;">'+address+'<br>'+city+'<br>'+postalCode+'</span></div>';
-              innerString = innerString + '<p style="margin:auto; width:150px; margin-top:10px;"><a href="'+googleMapUrl+'" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></p></div>';
+              innerString = innerString + '<p style="margin:auto; width:160px; margin-top:10px;"><a href="'+googleMapUrl+'" target="_blank" rel="noopener noreferrer">Open in Google Maps</a></p></div>';
           }
           if(upcomingEvents!= undefined && upcomingEvents!='N/A')
                  innerString = innerString + '<div style="text-align:center;padding:5px;"><a href="'+upcomingEvents+'" target="_blank" rel="noopener noreferrer">More events at this venue</a></div>';
