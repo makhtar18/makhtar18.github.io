@@ -1,0 +1,31 @@
+.nav-pills .nav-link{
+  color:white;
+  border-radius: 10px !important;
+   
+}
+.nav-pills .nav-link.active{
+  background-color:unset !important;
+  border: 1.5px solid white;
+}
+
+
+.formH1{
+  color:#eeeaea;
+  margin:auto;
+  text-align: center;
+  padding-bottom: 4%;
+  border-bottom: 1px solid white;
+  font-family: Georgia, serif;;
+}
+
+.formInput{
+  font-size: 15px;
+  font-family: Arial, san-serif;
+  color:#89c3e0;
+}
+
+.form-check-label{
+  font-size: 15px;
+  font-family: Arial, san-serif;
+  color:#89c3e0;
+}
