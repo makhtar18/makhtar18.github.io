@@ -6,8 +6,16 @@ import { useState } from 'react';
 import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
+import Geohash from 'https://cdn.jsdelivr.net/npm/latlon-geohash@2.0.0';
+import DynamicTable from './DynamicTable';
+import { Fragment } from 'react';
+import NoResults from './NoResultsMessage';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const ticketmasterApiKey = 'zMcFauK2bK6lA8H3JfTHqncFofsT8qtK';
+const geocodeApiKey = 'AIzaSyCQtKQ4f9s_mMuNVY44fDCAfValQPITZiw';
+const ipInfoApiKey = '5b4b724fbcbf9e';
+const segmentIdDict= {"Music":"KZFzniwnSyZfZ7v7nJ", "Sports":"KZFzniwnSyZfZ7v7nE", "Arts&Theatre": "KZFzniwnSyZfZ7v7na", "Film":"KZFzniwnSyZfZ7v7nn","Miscellaneous":"KZFzniwnSyZfZ7v7n1","Default":""};
+
 const FrostedCard = () => {
     const [keyword, setKeyword] = useState(null);
     const [category, setCategory] = useState('Default');
@@ -16,11 +24,43 @@ const FrostedCard = () => {
     const [checkbox, setCheckbox] = useState(false);
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [resultTableData, setResultTableData] = useState([]);
+    const [showTable, setShowTable] = useState(false);
+    const [showResultsMessage, setShowResultsMessage] = useState(false);
+    const [showDetailsCard, setShowDetailsCard] = useState(false);
   
+    const getResultsTableInfo = async (segmentId,geohash)=>{
+        if(distance=='')
+            setDistance(10);
+        const response = await axios.get(`http://localhost:4000/resultsTable?keyword=${keyword}&segmentId=${segmentId}&radius=${distance}&geoPoint=${geohash}`);
+        return response.data;
+    }
+    const getGeoCoding = async () => {
+        var lat, lng, geo="";
+        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${geocodeApiKey}`);
+          if(response.data.results.length>0){
+            lat=response.data.results[0].geometry.location.lat;
+            lng=response.data.results[0].geometry.location.lng
+            geo = Geohash.encode(lat, lng, 6); 
+          }
+          return geo;
+    };
+    const getIpIfo = async () => {
+        var lat, lng, geo="";
+        const response = await axios.get(`https://ipinfo.io/?token=${ipInfoApiKey}`);
+          if(response.data!==undefined){
+            var loc = response.data.loc.split(',');
+            lat = loc[0];
+            lng = loc[1];
+            geo = Geohash.encode(lat, lng, 6);
+          }
+          return geo;
+    };
     const getOptions = async (searchText) => {
         if (searchText.length > 0) {
+          setOptions([]);
           setLoading(true);
-          const response = await axios.get(`https://app.ticketmaster.com/discovery/v2/suggest?apikey=${ticketmasterApiKey}&keyword=${searchText}`);
+          const response = await axios.get(`http://localhost:4000/keywordAutocomplete?keyword=${searchText}`);
           setLoading(false);
           if(response.data._embedded!==undefined)
             setOptions(response.data._embedded.attractions.map((option) => option.name));
@@ -33,15 +73,44 @@ const FrostedCard = () => {
           setLoading(false);
           setOptions([]);
         }
-      };
-    const handleSubmit = (e)=>{
+    };
+    const handleSubmit = async (e)=>{
+        var geohash, segmentId;
         e.preventDefault(); 
-        console.log(keyword);
+        
+        if(location!==''){
+            geohash = await getGeoCoding();    
+        }
+        else {
+            geohash = await getIpIfo();
+        };
+        if(geohash==''){
+            setResultTableData([]);
+            setShowTable(false);
+            setShowResultsMessage(true);
+        }
+        else{
+            segmentId = segmentIdDict[category];
+            var response = await getResultsTableInfo(segmentId,geohash);
+            setResultTableData(response);
+            setShowDetailsCard(false);
+            if(response.length>0){
+                setShowTable(true);
+                setShowResultsMessage(false);
+            }
+            else {
+                setResultTableData([]);
+                setShowTable(false);
+                setShowResultsMessage(true);
+            }
+        }
+
     }
     return (
+        <Fragment>
         <Card className='custom-card col-sm-6' style={{
             background: 'rgba(255, 255, 255, 0.2)',
-            backdropFilter: 'blur(4px)',
+            backdropFilter: 'blur(13px)',
             webkitbackdropfilter: 'blur(2px)',
             padding: '20px 20px 20px 20px',
             margin:'auto',
@@ -62,6 +131,7 @@ const FrostedCard = () => {
                       </div>
                     )}
                     filterOptions={() => options}
+                    isOptionEqualToValue={()=>{return true;}}
                     loading={loading}
                     options={options}
                     value={keyword}
@@ -113,6 +183,10 @@ const FrostedCard = () => {
                     setKeyword(null);
                 
                     setCategory("Default");
+                    setResultTableData([]);
+                    setShowTable(false);
+                    setShowResultsMessage(false);
+                    setShowDetailsCard(false);
                 
                 }
             }>
@@ -121,6 +195,13 @@ const FrostedCard = () => {
             </div>
         </Form>
         </Card>
+        {showResultsMessage && (
+            <NoResults marginText="8rem auto auto auto"></NoResults>
+        )}
+   
+        <DynamicTable data={resultTableData} setShowTable={setShowTable} showTable={showTable} showDetailsCard={showDetailsCard} setShowDetailsCard={setShowDetailsCard}></DynamicTable>
+        
+        </Fragment>
     );
   };
 

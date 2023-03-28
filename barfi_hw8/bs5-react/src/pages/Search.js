@@ -11,9 +11,3 @@ const Search = ()=>{
 };
 
 export default Search;
-/*
-● Search Form
-● Results Table
-● Event Details card
-● Mark event as “Favorite”
-*/
