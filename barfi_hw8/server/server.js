@@ -1,18 +1,28 @@
+const path = require('path');
 const axios = require('axios').default;
 const express = require('express');
 const app = express()
+app.use(express.static(path.join(__dirname,"./build")));
 const ticketmasterApiKey = "zMcFauK2bK6lA8H3JfTHqncFofsT8qtK";
 var SpotifyWebApi = require('spotify-web-api-node');
-var musicRelatedArtists=[];
+var geohash = require('ngeohash');
+
 
 var spotifyApi = new SpotifyWebApi({
   clientId: 'bfd2e4e08b8745a29aa8803da2c2f95b',
-  clientSecret: '109c6d664d50470db269a0cab628e83b',
-  redirectUri: 'http://localhost:3000'
+  clientSecret: '109c6d664d50470db269a0cab628e83b'
+});
+
+app.get("/geohash", async (req,res)=>{
+    res.set('Access-Control-Allow-Origin',"*");
+    var lat = req.query.lat;
+    var long = req.query.long;
+    var geohashResponse = geohash.encode(lat, long);
+    console.log(geohashResponse);
+    res.json(geohashResponse);
 });
 
 app.get("/eventsInfo", async (req,res)=>{
-    musicRelatedArtists=[];
     res.set('Access-Control-Allow-Origin',"*");
     var eventId = req.query.eventId;
     await axios.get("https://app.ticketmaster.com/discovery/v2/events/"+eventId+"?apikey="+ticketmasterApiKey)
@@ -29,8 +39,10 @@ app.get("/eventsInfo", async (req,res)=>{
                 'buyTicketAt':'',
                 'seatMap':'',
                 'artists':[],
-                'musicRelatedArtists':[]
+                'musicRelatedArtists':[],
+                'eventName':''
             }
+            responseData.eventName = response.data.name;
             if(response.data.dates!=undefined && response.data.dates.start!=undefined){
                 if(response.data.dates.start.localDate!=undefined){
                     responseData.date = responseData.date+response.data.dates.start.localDate
@@ -42,78 +54,76 @@ app.get("/eventsInfo", async (req,res)=>{
                         responseData.date = responseData.date+response.data.dates.start.localTime;
                     }
                 }
+            }
 
+            if(response.data._embedded.venues!=undefined && response.data._embedded.venues.length>0)
+                responseData.venue = response.data._embedded.venues[0].name;
 
-
-                if(response.data._embedded.venues!=undefined && response.data._embedded.venues.length>0)
-                    responseData.venue = response.data._embedded.venues[0].name;
-
-                if(response.data.classifications!=undefined && response.data.classifications.length>0){
-                    if(response.data.classifications[0].segment!=undefined && response.data.classifications[0].segment.name.toLowerCase()!='undefined'){
-                        segment=response.data.classifications[0].segment.name;
-                        if(responseData.genres=='')
-                            responseData.genres = segment;
-                        else
-                            responseData.genres = responseData.genres+' | '+segment;
-                    }
+            if(response.data.classifications!=undefined && response.data.classifications.length>0){
+                if(response.data.classifications[0].segment!=undefined && response.data.classifications[0].segment.name.toLowerCase()!='undefined'){
+                    segment=response.data.classifications[0].segment.name;
+                    if(responseData.genres=='')
+                        responseData.genres = segment;
+                    else
+                        responseData.genres = responseData.genres+' | '+segment;
+                }
         
-                    if(response.data.classifications[0].genre!=undefined && response.data.classifications[0].genre.name.toLowerCase()!='undefined'){
-                        genre=response.data.classifications[0].genre.name;
-                        if(responseData.genres=='')
-                            responseData.genres= genre;
-                        else
-                            responseData.genres=responseData.genres+' | '+genre;
-                    }
+                if(response.data.classifications[0].genre!=undefined && response.data.classifications[0].genre.name.toLowerCase()!='undefined'){
+                    genre=response.data.classifications[0].genre.name;
+                    if(responseData.genres=='')
+                        responseData.genres= genre;
+                    else
+                        responseData.genres=responseData.genres+' | '+genre;
+                }
                     
-                    if(response.data.classifications[0].subGenre!=undefined && response.data.classifications[0].subGenre.name.toLowerCase()!='undefined') {
-                        subGenre=response.data.classifications[0].subGenre.name;
+                if(response.data.classifications[0].subGenre!=undefined && response.data.classifications[0].subGenre.name.toLowerCase()!='undefined') {
+                    subGenre=response.data.classifications[0].subGenre.name;
                         if(responseData.genres=='')
                             responseData.genres= subGenre;
                         else
                             responseData.genres=responseData.genres+' | '+subGenre;
-                    }
-        
-                    if(response.data.classifications[0].type!=undefined && response.data.classifications[0].type.name.toLowerCase()!='undefined'){
-                        type=response.data.classifications[0].type.name;
-                        if(responseData.genres=='')
-                            responseData.genres = type;
-                        else
-                            responseData.genres=responseData.genres+' | '+type;
-                    }
-        
-                    if(response.data.classifications[0].subType!=undefined && response.data.classifications[0].subType.name.toLowerCase()!='undefined'){
-                        subType=response.data.classifications[0].subType.name;
-                        if(responseData.genres=='')
-                            responseData.genres = subType;
-                        else
-                            responseData.genres = responseData.genres+' | '+subType;
-                    }
                 }
-
-                if(response.data.priceRanges!=undefined && response.data.priceRanges.length>0){
-                    min = response.data.priceRanges[0].min;
-                    max = response.data.priceRanges[0].max;
-                    if(min!=undefined & max==undefined){
-                        responseData.priceRanges=min+' - '+min+' USD';
-                    }
-                    else if(max!=undefined & min==undefined){
-                        responseData.priceRanges=max+' - '+max+' USD';
-                    }
+        
+                if(response.data.classifications[0].type!=undefined && response.data.classifications[0].type.name.toLowerCase()!='undefined'){
+                    type=response.data.classifications[0].type.name;
+                    if(responseData.genres=='')
+                        responseData.genres = type;
                     else
-                        responseData.priceRanges=min+' - '+max+' USD';
+                        responseData.genres=responseData.genres+' | '+type;
                 }
-
-                if(response.data.dates.status!=undefined){
-                    responseData.ticketStatus = response.data.dates.status.code;
+        
+                if(response.data.classifications[0].subType!=undefined && response.data.classifications[0].subType.name.toLowerCase()!='undefined'){
+                    subType=response.data.classifications[0].subType.name;
+                    if(responseData.genres=='')
+                        responseData.genres = subType;
+                    else
+                        responseData.genres = responseData.genres+' | '+subType;
                 }
-
-                if(response.data.url!=undefined)
-                    responseData.buyTicketAt = response.data.url;
-        
-                if(response.data.seatmap!=undefined)
-                    responseData.seatMap = response.data.seatmap.staticUrl;
-        
             }
+
+            if(response.data.priceRanges!=undefined && response.data.priceRanges.length>0){
+                min = response.data.priceRanges[0].min;
+                max = response.data.priceRanges[0].max;
+                if(min!=undefined & max==undefined){
+                    responseData.priceRanges=min+' - '+min+' USD';
+                }
+                else if(max!=undefined & min==undefined){
+                    responseData.priceRanges=max+' - '+max+' USD';
+                }
+                else
+                    responseData.priceRanges=min+' - '+max+' USD';
+            }
+
+            if(response.data.dates.status!=undefined){
+                responseData.ticketStatus = response.data.dates.status.code;
+            }
+
+            if(response.data.url!=undefined)
+                responseData.buyTicketAt = response.data.url;
+        
+            if(response.data.seatmap!=undefined)
+                responseData.seatMap = response.data.seatmap.staticUrl;
+        
 
             if(response.data._embedded.attractions!=undefined) {
                 for(attraction of response.data._embedded.attractions){
@@ -294,4 +304,4 @@ app.get("/resultsTable", (req,res)=>{
         });
 })
 
-app.listen(4000, ()=>{console.log("Server started on 4000")});
+app.listen(8080, ()=>{console.log("Server started on 8080")});

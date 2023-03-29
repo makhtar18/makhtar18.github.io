@@ -6,7 +6,6 @@ import { useState } from 'react';
 import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
-import Geohash from 'https://cdn.jsdelivr.net/npm/latlon-geohash@2.0.0';
 import DynamicTable from './DynamicTable';
 import { Fragment } from 'react';
 import NoResults from './NoResultsMessage';
@@ -28,11 +27,16 @@ const FrostedCard = () => {
     const [showTable, setShowTable] = useState(false);
     const [showResultsMessage, setShowResultsMessage] = useState(false);
     const [showDetailsCard, setShowDetailsCard] = useState(false);
+
+    const getGeohash = async (lat,long)=>{
+        const response = await axios.get(`https://assignment8webtech.uw.r.appspot.com/geohash?lat=${lat}&long=${long}`);
+        return response.data;
+    }
   
     const getResultsTableInfo = async (segmentId,geohash)=>{
         if(distance=='')
             setDistance(10);
-        const response = await axios.get(`http://localhost:4000/resultsTable?keyword=${keyword}&segmentId=${segmentId}&radius=${distance}&geoPoint=${geohash}`);
+        const response = await axios.get(`https://assignment8webtech.uw.r.appspot.com/resultsTable?keyword=${keyword}&segmentId=${segmentId}&radius=${distance}&geoPoint=${geohash}`);
         return response.data;
     }
     const getGeoCoding = async () => {
@@ -41,7 +45,7 @@ const FrostedCard = () => {
           if(response.data.results.length>0){
             lat=response.data.results[0].geometry.location.lat;
             lng=response.data.results[0].geometry.location.lng
-            geo = Geohash.encode(lat, lng, 6); 
+            geo = getGeohash(lat, lng); 
           }
           return geo;
     };
@@ -52,7 +56,7 @@ const FrostedCard = () => {
             var loc = response.data.loc.split(',');
             lat = loc[0];
             lng = loc[1];
-            geo = Geohash.encode(lat, lng, 6);
+            geo = getGeohash(lat, lng); 
           }
           return geo;
     };
@@ -60,7 +64,7 @@ const FrostedCard = () => {
         if (searchText.length > 0) {
           setOptions([]);
           setLoading(true);
-          const response = await axios.get(`http://localhost:4000/keywordAutocomplete?keyword=${searchText}`);
+          const response = await axios.get(`https://assignment8webtech.uw.r.appspot.com/keywordAutocomplete?keyword=${searchText}`);
           setLoading(false);
           if(response.data._embedded!==undefined)
             setOptions(response.data._embedded.attractions.map((option) => option.name));

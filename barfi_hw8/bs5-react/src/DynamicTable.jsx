@@ -9,9 +9,9 @@ const DynamicTable = (props) => {
     return (
             <div>
                 {props.showTable && (<div className="col-sm-10" style={{margin:"8rem auto auto auto", overflowX: "auto"}}>
-                    <table className="table table-dark table-striped" style={{borderRadius: "15px", textAlign:"center", margin:"auto", minWidth:"470px"}}>
+                    <table className="table table-dark table-striped" style={{borderRadius: "20px", textAlign:"center", margin:"auto", minWidth:"470px", overflow:"hidden"}}>
                         <thead>
-                            <tr className="row">
+                            <tr className="row px-2">
                                 <th className="col col-md-2">Date/Time</th>
                                 <th className="col-2 col-md-1">Icon</th>
                                 <th className="col col-md-4">Event</th>
@@ -22,7 +22,7 @@ const DynamicTable = (props) => {
                         <tbody>
                         {props.data.map((val) => {
                             return (
-                                <tr className="row" onClick={() => {
+                                <tr className="row px-2" onClick={() => {
                                         console.log("Row clicked!");
                                         setEventId(val.eventId);
                                         setEventName(val.event);
@@ -30,7 +30,7 @@ const DynamicTable = (props) => {
                                         props.setShowTable(false);
                                         props.setShowDetailsCard(true);
                                         setArtists(val.artists);
-                                    }} style={{cursor:"pointer"}}>
+                                    }} style={{cursor:"pointer"}} key={val.eventId}>
                                     <td className="col col-md-2">{val.date}<br></br>{val.time}</td>
                                     <td className="col-2 col-md-1" style={{position: "relative", display: "flex", alignItems: "center"}}>
                                         <img className="col-12" src={val.icon} alt='' style={{objectFit: "cover", margin:"auto", width:"55px", height:"65px"}}>
