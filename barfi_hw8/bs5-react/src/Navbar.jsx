@@ -1,6 +1,6 @@
 import React from "react";
 import Nav from 'react-bootstrap/Nav';
-import {Link, useResolvedPath, useLocation} from "react-router-dom";
+import {Link, useMatch, useResolvedPath, useLocation} from "react-router-dom";
 const NavBar = ()=>{
     return (
     <Nav variant="pills" defaultActiveKey="link-1" className='justify-content-end mt-2' style={{ width: "100%" }}>

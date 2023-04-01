@@ -20,7 +20,8 @@ var SpotifyWebApi = require('spotify-web-api-node');
 // credentials are optional
 var spotifyApi = new SpotifyWebApi({
   clientId: 'bfd2e4e08b8745a29aa8803da2c2f95b',
-  clientSecret: '109c6d664d50470db269a0cab628e83b'
+  clientSecret: '109c6d664d50470db269a0cab628e83b',
+  redirectUri: 'http://localhost:3000'
 });
 
 function TabPanel(props) {
@@ -77,40 +78,17 @@ const DetailsCard = (props)=>{
 
     useEffect(() => {
       async function getAccessToken() {
-        const response = await axios.get(`https://assignment8webtech.uw.r.appspot.com/getSpotifyAuthToken`);
+        const response = await axios.get(`http://localhost:4000/getSpotifyAuthToken`);
         return response.data;
       }
 
       const getEventData = async () => {
-        const response = await axios.get(`https://assignment8webtech.uw.r.appspot.com/eventsInfo?eventId=${props.eventId}`);
+        const response = await axios.get(`http://localhost:4000/eventsInfo?eventId=${props.eventId}`);
         const eventData = await response.data;
         //console.log("EventData called", eventData);
         setEventsResponse(eventData);
         var musicRelatedArtists = [];
-        for (let artist of eventData.musicRelatedArtists) {
-          spotifyApi.searchArtists(artist)
-          .then(function(data) {
-            console.log("Spotify status code: " + data.statusCode);
-            musicRelatedArtists.push(data.body.artists.items[0]);
-            var artistId = data.body.artists.items[0].id;
-            spotifyApi.getArtistAlbums(artistId, { limit: 3 })
-            .then(function(albumData) {
-              spotifyAlbumnResponse[artistId] = albumData.body.items;
-              //console.log('Artist albums', albumData.body.items);
-            }, function(err) {
-              console.error(err);
-            });
-          }, function(err) {
-            console.error("Spotify Api Error:", err);
-            getAccessToken().then((res) => {
-              setAccessToken(res);
-              console.error("Token generated", res);
-              spotifyApi.setAccessToken(accessToken);
-            });
-          });
-        }
-        setSpotifyResponse(musicRelatedArtists);
-        /*try {
+        try {
           for (let artist of eventData.musicRelatedArtists) {
             const data = await spotifyApi.searchArtists(artist);
             console.log("Spotify status code: " + data.statusCode);
@@ -133,7 +111,7 @@ const DetailsCard = (props)=>{
             console.error("Token generated", res);
             spotifyApi.setAccessToken(accessToken);
           });
-        }*/
+        }
       };
       getEventData();
     }, [props.eventId,accessToken]);
@@ -141,7 +119,7 @@ const DetailsCard = (props)=>{
     useEffect(() => {
 
       async function getVenueDetails(venue) {
-        const response = await axios.get(`https://assignment8webtech.uw.r.appspot.com/getVenueDetails?venue=${venue}`);
+        const response = await axios.get(`http://localhost:4000/getVenueDetails?venue=${venue}`);
         console.log("Venue status code ",response.status);
         return response.data;
       }
@@ -173,7 +151,7 @@ const DetailsCard = (props)=>{
           <h3 style={{color: "white", margin: "0", display: "flex", alignItems: "center"}}>
             {props.eventName}
           <div style={{marginLeft: "0.5rem"}}>
-            <Favorite eventsResponse={eventsResponse} eventId={props.eventId}/>
+            <Favorite />
           </div>
            </h3>
         </div>

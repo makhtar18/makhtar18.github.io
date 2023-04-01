@@ -30,11 +30,10 @@ const VenueTab = (props)=>{
                         lines={2}
                         more={["Show more", <FaAngleDown color="white"/>]}
                         less={["Show less", <FaAngleUp color="white"/>]}
-                        className="content-css"
+                        className="content-css col-sm-11"
                         anchorClass="show-more-less-clickable"
                         expanded={false}
                         truncatedEndingComponent={""}
-                        width={"383"}
                         >{props.venueResponse.openHours}</ShowMoreText>
                 </div>)}
                 {(props.venueResponse.showGeneralRule) && (<div className="mt-3" style={{textAlign:"center"}}>
@@ -47,7 +46,6 @@ const VenueTab = (props)=>{
                         anchorClass="show-more-less-clickable"
                         expanded={false}
                         truncatedEndingComponent={""}
-                        width={"370"}
                         >{props.venueResponse.generalRule}</ShowMoreText>
                 </div>)}
                 {(props.venueResponse.showChildRule) && (<div className="mt-3" style={{textAlign:"center"}}>
@@ -56,11 +54,10 @@ const VenueTab = (props)=>{
                         lines={2}
                         more={["Show more", <FaAngleDown color="white"/>]}
                         less={["Show less", <FaAngleUp color="white"/>]}
-                        className="content-css"
+                        className="content-css col-sm-11"
                         anchorClass="show-more-less-clickable"
                         expanded={false}
                         truncatedEndingComponent={""}
-                        width={"372"}
                         >{props.venueResponse.childRule}</ShowMoreText>
                 </div>)}
             </div>
